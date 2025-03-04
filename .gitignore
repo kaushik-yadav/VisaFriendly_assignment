@@ -1,0 +1,6 @@
+experiment.ipynb
+venv
+.env
+output.csv
+job_postings.csv
+__pycache__/
