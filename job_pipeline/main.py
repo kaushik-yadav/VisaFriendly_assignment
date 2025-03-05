@@ -1,7 +1,6 @@
-from extract.serpapi_jobs import fetch_serpapi_jobs
-from extract.linkedin_jobs import fetch_linkedin_jobs
-from transform.clean_jobs import clean_jobs
-from load.save_to_csv import save_to_csv
+from scrape import fetch_serpapi_jobs, fetch_linkedin_jobs
+from utils import clean_jobs, save_to_csv
+from db import SQLiteDB
 
 def main():
     # Fetching jobs from serpapi and linkedin
@@ -15,9 +14,20 @@ def main():
     all_jobs = serpapi_jobs + linkedin_jobs
     cleaned_jobs = clean_jobs(all_jobs)
 
+
+    print("Storing the cleaned jobs to a sqlite database")
+    db = SQLiteDB("job_postings.db")
+    print("Storing data in db")
+    db.store_data(cleaned_jobs)
+    print("data stored in db")
+    db.close_conn()
+    print("Closed connection")
+    print("Data stored successfully!")
+
+    ## if csv is needed use this
     # Saving the cleaned jobs to a csv file
-    print("Saving the cleaned jobs to a csv file")
-    save_to_csv(cleaned_jobs)
+    # print("Saving the cleaned jobs to a csv file")
+    # save_to_csv(cleaned_jobs)
 
 if __name__ == "__main__":
     main()
