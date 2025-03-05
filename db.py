@@ -1,6 +1,4 @@
 import sqlite3
-import pandas as pd
-
 class SQLiteDB:
     def __init__(self, db_name):
         self.db_name = db_name
@@ -8,9 +6,9 @@ class SQLiteDB:
         self.cursor = self.conn.cursor()
 
     # Used to store data in sqlite database from the dataframe
-    def store_data(self, df):
+    def store_data(self, df, mode = "append"):
         # Store DataFrame in SQL Table
-        df.to_sql("jobs_data", self.conn, if_exists="append", index=False)
+        df.to_sql("jobs_data", self.conn, if_exists=mode, index=False)
     
     # Close the connection
     def close_conn(self):
