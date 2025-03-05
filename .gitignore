@@ -1,6 +1,20 @@
+# Jupyter Notebook checkpoints
 experiment.ipynb
-venv
+.ipynb_checkpoints/
+
+# virtual environments
+venv/
+.venv/
+
+# Environment files
 .env
+
+# Data output files
 output.csv
 job_postings.csv
+job_postings.db
+
+# Python cache
 __pycache__/
+*.pyc
+*.pyo
