@@ -3,15 +3,20 @@ from utils import clean_jobs, save_to_csv
 from db import SQLiteDB
 
 POSITION = "Data Engineer"
-LOCATION = "worldwide"
+# choosing diff locations as linkedin recognizes different parameter for all jobs and serpapi requires different
+LOCATION_LINKEDIN = "worldwide"
+LOCATION_SERP = ""
 RESULTS_WANTED = 10
 
 
 def main():
     # Fetching jobs from serpapi and linkedin
     print("Fetching jobs from serpapi and linkedin")
-    serpapi_jobs = fetch_serpapi_jobs(POSITION, LOCATION, RESULTS_WANTED)
-    linkedin_jobs = fetch_linkedin_jobs(POSITION, LOCATION, RESULTS_WANTED)
+    serpapi_jobs = fetch_serpapi_jobs(POSITION, LOCATION_SERP, RESULTS_WANTED)
+    print("serpapi_jobs : ")
+    for i in serpapi_jobs:
+        print(i)
+    linkedin_jobs = fetch_linkedin_jobs(POSITION, LOCATION_LINKEDIN, RESULTS_WANTED)
     print("Jobs have been fetched from serpapi and linkedin")
 
     # Combining all jobs and cleaning them
