@@ -59,11 +59,13 @@ def extract_job_info(job_card):
     time_tag = job_card.find("time", class_="job-search-card__listdate")
     job_posting_time = time_tag.text.strip() if time_tag else None
 
+    apply_tag = job_card.find("a", class_="apply-button")  # External ATS link
+    ats_link = apply_tag["href"] if apply_tag else None
     return {
         "job_title": job_title,
         "company": company_name,
         "location": job_location,
-        "job_url": job_url,
+        "job_url": ats_link if ats_link else job_url,
         "job_posting_time": job_posting_time,
     }
 
@@ -115,6 +117,8 @@ def fetch_linkedin_jobs(
             "f_JT": job_type,
             "start": start,
             "f_AL": "true" if easy_apply else None,
+            # It filters the jobs for the past 24 hours where "r86400" refers to last 24 hours( since 24 hours = 86400 seconds)
+            "f_TPR": "r86400",
         }
         params = {k: v for k, v in params.items() if v is not None}
 
@@ -160,6 +164,8 @@ def fetch_serpapi_jobs(postion, location, results_wanted):
         "q": postion,
         "location": location,
         "hl": "en",
+        # Retrives job from the last 24 hours
+        "tbs": "qdr:d",
         "api_key": API_KEY,
     }
 
@@ -173,7 +179,12 @@ def fetch_serpapi_jobs(postion, location, results_wanted):
             "company": i["company_name"],
             "location": i["location"],
             "job_description": " ".join(i["description"].split("\n")),
-            "job_url": i["share_link"],
+            # If the ATS link is available then we take it else we take the share link (google search link)
+            "job_url": (
+                i.get("apply_options", [{}])[0].get("link")
+                if i.get("apply_options")
+                else i.get("share_link")
+            ),
             "job_posting_time": i["detected_extensions"].get("posted_at"),
         }
         jobs_data.append(job_data)
