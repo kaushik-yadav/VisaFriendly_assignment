@@ -10,10 +10,11 @@ This project scrapes job postings from LinkedIn and SerpAPI, storing visa-friend
 - **Pandas** (Data Handling)
 - **SQLite** (Database Storage)
 - **SerpAPI** (Google Job Search API)
+- **CSV Storage** (Job listings are saved as CSV files)
 
 ## Features
 - Fetches job postings from **LinkedIn** & **SerpAPI**
-- Stores job data in **SQLite database**
+- Stores job data in **SQLite database** and exports results in **CSV format**
 - Removes **duplicate job listings** based on job URLs
 - **Error handling** for missing fields & database integrity
 - Structured as a **modular Python application**
@@ -52,8 +53,22 @@ python main.py
 ## Approach
 1. **Data Scraping**: Extracts job details from LinkedIn & Google Jobs.
 2. **Data Cleaning**: Removes duplicates, handles missing fields.
-3. **Database Storage**: Saves jobs to SQLite, ensuring uniqueness using `job_url`.
+3. **Database Storage & CSV Output**: Saves jobs to SQLite, ensuring uniqueness using `job_url`, and exports results in CSV format.
 4. **Logging & Debugging**: Identifies skipped jobs and errors.
+
+## Known Issues & Alternative Solutions
+### ❌ Why ATS Links Are Not Working for LinkedIn Jobs?
+Unlike Google Jobs, LinkedIn does not always expose direct ATS links in the job listing HTML.
+
+- **Reason**: Many LinkedIn job postings redirect to an internal LinkedIn apply page instead of linking directly to an external ATS.
+- **Issue**: The HTML structure of job postings lacks a consistent class or attribute containing the ATS link.
+
+### 🔄 Possible Alternatives
+- **Scrape the job details page** – This would require visiting each job URL and extracting an external link if available. However, LinkedIn often restricts scraping at scale.
+- **LinkedIn API (Premium Only)** – The API provides richer job details, but it's restricted and requires approval.
+- **Use a Browser Automation Tool (e.g., Selenium)** – This can dynamically load job pages but is slower and requires handling LinkedIn’s anti-bot measures.
+
+For now, the script prioritizes the available job URL when the ATS link is missing. Let me know if we should explore an alternative approach!
 
 ## Scheduling
 We can use two approaches for Scheduling:
@@ -62,4 +77,3 @@ We can use two approaches for Scheduling:
 
 ## License
 This project is licensed under the MIT License.
-
